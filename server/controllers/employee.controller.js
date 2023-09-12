@@ -4,11 +4,7 @@ const router = express.Router();
 const Employee = require("../models/employee.model");
 const { generateCrudMethods } = require("../services");
 const employeeCrud = generateCrudMethods(Employee);
-const {
-  validateDbId,
-  raiseRecord404Error,
-  errorHandler,
-} = require("../middlewares");
+const { validateDbId, raiseRecord404Error } = require("../middlewares");
 
 router.get("/", (req, res, next) => {
   employeeCrud
@@ -31,8 +27,18 @@ router.post("/", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.put("/:id", validateDbId, (req, res) => {});
+router.put("/:id", validateDbId, (req, res, next) => {
+  employeeCrud
+    .update(req.params.id, req.body)
+    .then((data) => (data ? res.send(data) : raiseRecord404Error(req, res)))
+    .catch((err) => next(err));
+});
 
-router.delete("/:id", validateDbId, (req, res) => {});
+router.delete("/:id", validateDbId, (req, res, next) => {
+  employeeCrud
+    .delete(req.params.id)
+    .then((data) => (data ? res.send(data) : raiseRecord404Error(req, res)))
+    .catch((err) => next(err));
+});
 
 module.exports = router;

@@ -7,7 +7,6 @@ const { errorHandler } = require("./middlewares");
 
 const app = express();
 
-//middleware
 app.use(bodyParses.json());
 app.use("/api/employees", employeeRouter);
 app.use(errorHandler);
