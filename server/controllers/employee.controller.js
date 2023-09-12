@@ -4,33 +4,31 @@ const router = express.Router();
 const Employee = require("../models/employee.model");
 const { generateCrudMethods } = require("../services");
 const employeeCrud = generateCrudMethods(Employee);
-const { validateDbId } = require("../middlewares");
+const {
+  validateDbId,
+  raiseRecord404Error,
+  errorHandler,
+} = require("../middlewares");
 
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   employeeCrud
     .getAll()
     .then((data) => res.send(data))
-    .catch((err) => console.log(err));
+    .catch((err) => next(err));
 });
 
-router.get("/:id", validateDbId, (req, res) => {
+router.get("/:id", validateDbId, (req, res, next) => {
   employeeCrud
     .getById(req.params.id)
-    .then((data) =>
-      data
-        ? res.send(data)
-        : res
-            .status(404)
-            .json({ error: "No record with given _id" + req.params.id })
-    )
-    .catch((err) => console.log(err));
+    .then((data) => (data ? res.send(data) : raiseRecord404Error(req, res)))
+    .catch((err) => next(err));
 });
 
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
   employeeCrud
     .create(req.body)
     .then((data) => res.status(201).json(data))
-    .catch((err) => console.log(err));
+    .catch((err) => next(err));
 });
 
 router.put("/:id", validateDbId, (req, res) => {});

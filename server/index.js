@@ -3,12 +3,14 @@ const bodyParses = require("body-parser");
 
 const connectDb = require("./db");
 const employeeRouter = require("./controllers/employee.controller");
+const { errorHandler } = require("./middlewares");
 
 const app = express();
 
 //middleware
 app.use(bodyParses.json());
 app.use("/api/employees", employeeRouter);
+app.use(errorHandler);
 
 connectDb()
   .then(() => {
