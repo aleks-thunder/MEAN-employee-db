@@ -1,0 +1,17 @@
+form label {
+  color: grey;
+  text-transform: uppercase;
+}
+
+form input {
+  font-weight: 500;
+}
+
+form input::placeholder {
+  color: grey !important;
+  font-weight: 300 !important;
+}
+
+form button[type="submit"] {
+  text-transform: uppercase;
+}
